@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
 	<flow name="pingWithAhello" doc:id="92f61b2e-31a5-4ced-89a4-1f1910152603" >
 		<http:listener doc:name="GET /ping" doc:id="c7e79a99-30e2-447c-82cd-504c6ae99a2b" config-ref="HTTP_Listener_config" path="/ping" allowedMethods="GET"/>
 		<logger level="INFO" doc:name="Logger" doc:id="5a10636d-0c0a-4841-adaa-152c471c9b4a" message='#["HELLO: " ++ payload]'/>
-		<set-payload value='#["HELLO: " ++ payload]' doc:name="Set Payload" doc:id="808f2212-c6c4-41e3-944d-737c11a79b79" mimeType="application/json"/>
+		<ee:transform doc:name="Transform Message" doc:id="d9d1ea69-b714-4dea-950f-5a187613c910" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Hello": payload
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 	</flow>
 </mule>
